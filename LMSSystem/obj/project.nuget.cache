@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "qzRJ3GPShMgncMdw7rDXHmWo8r/Fv7C/4P0MnOWpJpgw9lpUznguYbaDg1ATUNTQBkqahpPFzogHsk8qOW+a5Q==",
+  "dgSpecHash": "JE+t7h8Rbi7SxiSM1piNTX94+c4uWaE4g8aym44R9V5eDb0Lfs5g2X8kQ6WZmHtyfybgVB2WVMnSV4nGn+B9bA==",
   "success": true,
   "projectFilePath": "F:\\ThucTap\\LMSSystem\\LMSSystem\\LMSSystem.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hiep4\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
+    "C:\\Users\\hiep4\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "C:\\Users\\hiep4\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\hiep4\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
     "C:\\Users\\hiep4\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

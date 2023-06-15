@@ -1,4 +1,4 @@
-﻿using LMSSystem.Models;
+﻿﻿using LMSSystem.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LMSSystem.Data
@@ -9,22 +9,22 @@ namespace LMSSystem.Data
         {
 
         }
-        public DbSet<User>? Users { get; set; }
-        public DbSet<Role>? Roles { get; set; }
-        public DbSet<Class>? Classes { get; set; }
-        public DbSet<Course>? Courses { get; set; }
-        public DbSet<Schedule>? Schedules { get; set; }
-        public DbSet<Announcement>? Announcements { get; set; }
-        public DbSet<Lesson>? Lessons { get; set; }
-        public DbSet<Assignment>? Assignments { get; set; }
-        public DbSet<Exam>? Exams { get; set; }
-        public DbSet<Question>? Questions { get; set; }
-        public DbSet<Answer>? Answers { get; set; }
-        public DbSet<User_Schedule>? User_Schedule { get; set; }
-        public DbSet<Message>? Messages { get; set; }
-        public DbSet<User_Class>? User_Class { get; set; }
-        public DbSet<Material>? Materials { get; set; }
-        public DbSet<Feedback>? Feedbacks { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Class> Classes { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<Announcement> Announcements { get; set; }
+        public DbSet<Lesson> Lessons { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
+        public DbSet<Exam> Exams { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Answer> Answers { get; set; }
+        public DbSet<User_Schedule> User_Schedule { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<User_Class> User_Class { get; set; }
+        public DbSet<Material> Materials { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
