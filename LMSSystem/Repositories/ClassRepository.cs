@@ -35,7 +35,7 @@ namespace LMSSystem.Repositories
             }
         }
 
-        public async Task<List<ClassDTO>> GetAllClasssAsync()
+        public async Task<List<ClassDTO>> GetAllClassesAsync()
         {
             var Classs = await _context.Classes!.ToListAsync();
             return _mapper.Map<List<ClassDTO>>(Classs);
