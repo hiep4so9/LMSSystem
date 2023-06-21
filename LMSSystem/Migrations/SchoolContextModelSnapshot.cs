@@ -142,7 +142,7 @@ namespace LMSSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExamID"), 1L, 1);
 
-                    b.Property<int>("ClassID")
+                    b.Property<int>("CourseID")
                         .HasColumnType("int");
 
                     b.Property<TimeSpan>("Duration")
@@ -158,9 +158,36 @@ namespace LMSSystem.Migrations
 
                     b.HasKey("ExamID");
 
-                    b.HasIndex("ClassID");
+                    b.HasIndex("CourseID");
 
                     b.ToTable("Exams");
+                });
+
+            modelBuilder.Entity("LMSSystem.Models.Exam_User", b =>
+                {
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ExamID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ExamDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("GradedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Remark")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Score")
+                        .HasColumnType("float");
+
+                    b.HasKey("UserID", "ExamID");
+
+                    b.HasIndex("ExamID");
+
+                    b.ToTable("Exam_User");
                 });
 
             modelBuilder.Entity("LMSSystem.Models.Feedback", b =>
@@ -489,13 +516,32 @@ namespace LMSSystem.Migrations
 
             modelBuilder.Entity("LMSSystem.Models.Exam", b =>
                 {
-                    b.HasOne("LMSSystem.Models.Class", "Class")
+                    b.HasOne("LMSSystem.Models.Course", "Course")
                         .WithMany()
-                        .HasForeignKey("ClassID")
+                        .HasForeignKey("CourseID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Class");
+                    b.Navigation("Course");
+                });
+
+            modelBuilder.Entity("LMSSystem.Models.Exam_User", b =>
+                {
+                    b.HasOne("LMSSystem.Models.Exam", "Exam")
+                        .WithMany()
+                        .HasForeignKey("ExamID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("LMSSystem.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Exam");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LMSSystem.Models.Feedback", b =>

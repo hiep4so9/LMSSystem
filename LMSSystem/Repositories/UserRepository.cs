@@ -13,12 +13,12 @@ namespace LMSSystem.Repositories
     {
         private readonly SchoolContext _context;
         private readonly IMapper _mapper;
-        /*    private readonly IEmailRepository _emailRepository;*/
-        public UserRepository(SchoolContext context, IMapper mapper/*, IEmailRepository emailRepository*/)
+        private readonly IEmailRepository _emailRepository;
+        public UserRepository(SchoolContext context, IMapper mapper, IEmailRepository emailRepository)
         {
             _context = context;
             _mapper = mapper;
-/*            _emailRepository = emailRepository;*/
+            _emailRepository = emailRepository;
         }
 
         public async Task<int> AddUserAsync(UserDTO model)
@@ -85,6 +85,92 @@ namespace LMSSystem.Repositories
                 _context.Users!.Update(updateUser);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<int> VerifyEmail(string token)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.VerificationToken == token);
+
+            if (user == null)
+            {
+                return -1;
+            }
+            user.VerifyAt = DateTime.Now;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return 1;
+            }
+            catch (DbUpdateException)
+            {
+                return -1;
+            }
+        }
+
+        public async Task<UserDTO> GetUserByRefreshToken(string refreshToken)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+            if (user == null)
+            {
+                return null;
+            }
+            return _mapper.Map<UserDTO>(user);
+        }
+
+        public async Task SetRefreshToken(int userId, RefreshToken newRefreshToken)
+        {
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user != null)
+            {
+                user.RefreshToken = newRefreshToken.Token;
+                user.RefreshTokenCreated = newRefreshToken.Created;
+                user.RefreshTokenExpries = newRefreshToken.Expires;
+                await _context.SaveChangesAsync();
+            }
+        }
+
+
+
+        public async Task<int> ForgotPassword(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                return -1;
+            }
+
+            user.PasswordResetToken = jwtHandler.CreateRandomToken();
+            user.ResetTokenExpries = DateTime.Now.AddDays(1);
+            await _context.SaveChangesAsync();
+            var sendEmail = new EmailDTO
+            {
+                To = email,
+                Subject = "Reset password link",
+                Body = "<a target=" + "_blank" + " href=" + "http://localhost:7254/api/Users/reset-password/" + user.PasswordResetToken + ">CLICK HERE</a>"
+
+            };
+            await _emailRepository.SendEmailAsync(sendEmail);
+
+            return 1;
+        }
+
+        public async Task<int> ResetPassword(string token, string password)
+        {
+            var u = await _context.Users.FirstOrDefaultAsync(u => u.Username == "hiep");
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == token);
+            if (user == null || user.ResetTokenExpries < DateTime.Now)
+            {
+                return -1;
+            }
+            string passwordHash = HashMD5.GetMD5Hash(password);
+
+            user.Password = passwordHash;
+            user.PasswordResetToken = token;
+            user.ResetTokenExpries = null;
+
+            await _context.SaveChangesAsync();
+            return 1;
         }
     }
 }

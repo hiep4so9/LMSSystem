@@ -556,3 +556,17 @@ F:\ThucTap\LMSSystem_123\LMSSystem\obj\Debug\net6.0\refint\LMSSystem.dll
 F:\ThucTap\LMSSystem_123\LMSSystem\obj\Debug\net6.0\LMSSystem.pdb
 F:\ThucTap\LMSSystem_123\LMSSystem\obj\Debug\net6.0\LMSSystem.genruntimeconfig.cache
 F:\ThucTap\LMSSystem_123\LMSSystem\obj\Debug\net6.0\ref\LMSSystem.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\BouncyCastle.Cryptography.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\MailKit.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\MimeKit.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\System.Formats.Asn1.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\System.Text.Encoding.CodePages.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Text.Encoding.CodePages.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Scrutor.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Microsoft.DotNet.PlatformAbstractions.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Swashbuckle.AspNetCore.Annotations.dll

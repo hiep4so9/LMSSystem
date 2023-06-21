@@ -8,8 +8,8 @@ namespace LMSSystem.Models
         [Key]
         public int ExamID { get; set; }
 
-        [ForeignKey("Class")]
-        public int ClassID { get; set; }
+        [ForeignKey("Course")]
+        public int CourseID { get; set; }
 
         [Required]
         public string? ExamTitle { get; set; }
@@ -19,6 +19,6 @@ namespace LMSSystem.Models
 
         [Required]
         public TimeSpan Duration { get; set; }
-        public virtual Class? Class { get; set; }
+        public virtual Course? Course { get; set; }
     }
 }

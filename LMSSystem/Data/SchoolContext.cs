@@ -67,11 +67,11 @@ namespace LMSSystem.Data
                 .WithMany()
                 .HasForeignKey(a => a.ClassID);
 
-            // Một Exam thuộc về một Class
+            // Một Exam thuộc về một Course
             modelBuilder.Entity<Exam>()
-                .HasOne(e => e.Class)
+                .HasOne(e => e.Course)
                 .WithMany()
-                .HasForeignKey(e => e.ClassID);
+                .HasForeignKey(e => e.CourseID);
 
             // Một Question thuộc về một Exam
             modelBuilder.Entity<Question>()
@@ -124,6 +124,22 @@ namespace LMSSystem.Data
                 .HasOne(uc => uc.Class)
                 .WithMany()
                 .HasForeignKey(uc => uc.ClassID)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // Quan hệ Exam - Exam_User - User
+            modelBuilder.Entity<Exam_User>()
+                .HasKey(uc => new { uc.UserID, uc.ExamID });
+
+            modelBuilder.Entity<Exam_User>()
+                .HasOne(uc => uc.User)
+                .WithMany()
+                .HasForeignKey(uc => uc.UserID)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Exam_User>()
+                .HasOne(uc => uc.Exam)
+                .WithMany()
+                .HasForeignKey(uc => uc.ExamID)
                 .OnDelete(DeleteBehavior.NoAction);
 
 
