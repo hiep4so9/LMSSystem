@@ -19,11 +19,11 @@ namespace LMSSystem.Controllers
         }
 
         [HttpGet/*, Authorize(Roles = "Admin")*/]
-        public async Task<IActionResult> GetAllSchedules(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllSchedulesDetailAsync(int page = 1, int pageSize = 10)
         {
             try
             {
-                var allSchedules = await _ScheduleRepo.GetAllSchedulesAsync();
+                var allSchedules = await _ScheduleRepo.GetAllSchedulesDetailAsync();
                 var paginatedSchedules = Pagination.Paginate(allSchedules, page, pageSize);
 
                 var totalSchedules = allSchedules.Count;

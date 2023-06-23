@@ -21,9 +21,9 @@ namespace LMSSystem.Repositories
             var newMaterial = _mapper.Map<Material>(model);
             _context.Materials!.Add(newMaterial);
             await _context.SaveChangesAsync();
-
             return newMaterial.MaterialID;
         }
+
 
         public async Task DeleteMaterialAsync(int id)
         {

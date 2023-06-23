@@ -11,7 +11,7 @@ namespace LMSSystem.Data
 
         public int ReceiverID { get; set; }
 
-        public string? MessageContent { get; set; } = string.Empty;
+        public string MessageContent { get; set; } = string.Empty;
 
         public DateTime MessageDate { get; set; }
 

@@ -47,10 +47,10 @@ namespace LMSSystem.Repositories
             return _mapper.Map<RoleDTO>(Roles);
         }
 
-        public async Task<string> GetRoleNameFromRoleId(int id)
+        public async Task<RoleDTO> GetRoleNameFromRoleId(int id)
         {
-            var role = await _context.Roles.SingleOrDefaultAsync(r => r.RoleID == id);
-            return role?.RoleName;
+            var Roles = await _context.Roles.FindAsync(id);
+            return _mapper.Map<RoleDTO>(Roles);
         }
 
         public async Task UpdateRoleAsync(int id, RoleDTO model)

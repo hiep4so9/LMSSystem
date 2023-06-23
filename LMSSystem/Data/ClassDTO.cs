@@ -7,6 +7,6 @@ namespace LMSSystem.Data
     {
         public int ClassID { get; set; }
 
-        public string? ClassName { get; set; } = string.Empty;
+        public string ClassName { get; set; } = string.Empty;
     }
 }
