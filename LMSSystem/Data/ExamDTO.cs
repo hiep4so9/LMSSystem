@@ -9,9 +9,9 @@ namespace LMSSystem.Data
 
         public int ClassID { get; set; }
 
-        public string? ExamTitle { get; set; } = string.Empty;
+        public string ExamTitle { get; set; } = string.Empty;
 
-        public string? ExamType { get; set; } = string.Empty;
+        public string ExamType { get; set; } = string.Empty;
 
         public TimeSpan Duration { get; set; }
     }

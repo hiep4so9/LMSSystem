@@ -45,14 +45,14 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpGet("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetClassById(int id)
         {
             var Class = await _ClassRepo.GetClassAsync(id);
             return Class == null ? NotFound() : Ok(Class);
         }
 
-        [HttpPost/*, Authorize*/]
+        [HttpPost, Authorize(Roles = "Teacher")]
         public async Task<IActionResult> AddNewClass(ClassDTO model)
         {
             try

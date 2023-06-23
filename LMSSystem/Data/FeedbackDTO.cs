@@ -10,7 +10,7 @@ namespace LMSSystem.Data
 
         public int UserID { get; set; }
 
-        public string? FeedbackContent { get; set; } = string.Empty;
+        public string FeedbackContent { get; set; } = string.Empty;
 
         public DateTime FeedbackDate { get; set; }
     }

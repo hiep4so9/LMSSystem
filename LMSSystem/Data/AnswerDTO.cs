@@ -9,7 +9,7 @@ namespace LMSSystem.Data
 
         public int QuestionID { get; set; }
 
-        public string? AnswerContent { get; set; } = string.Empty;
+        public string AnswerContent { get; set; } = string.Empty;
 
         public bool IsCorrect { get; set; }
         

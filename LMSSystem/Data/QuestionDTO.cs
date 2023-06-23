@@ -7,8 +7,8 @@ namespace LMSSystem.Data
     {
         public int QuestionID { get; set; }
         public int ExamID { get; set; }
-        public string? QuestionContent { get; set; } = string.Empty;
-        public string? QuestionType { get; set; } = string.Empty;
+        public string QuestionContent { get; set; } = string.Empty;
+        public string QuestionType { get; set; } = string.Empty;
 
     }
 }

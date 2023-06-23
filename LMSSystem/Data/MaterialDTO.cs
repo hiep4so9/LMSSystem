@@ -7,8 +7,8 @@ namespace LMSSystem.Data
     {
         public int MaterialID { get; set; }
         public int CourseID { get; set; }
-        public string? MaterialTitle { get; set; } = string.Empty;
-        public string? MaterialFile { get; set; } = string.Empty;
+        public string MaterialTitle { get; set; } = string.Empty;
+        public string MaterialFile { get; set; } = string.Empty;
         public DateTime UploadDate { get; set; }
     }
 }

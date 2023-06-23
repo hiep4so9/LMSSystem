@@ -36,6 +36,7 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
+builder.Services.AddScoped<IFirebaseStorageRepository, FirebaseStorageRepository>();
 
 builder.Services.AddSwaggerGen(options =>
 {

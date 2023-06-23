@@ -18,6 +18,7 @@ namespace LMSSystem.Repositories
         }
         public async Task<int> AddScheduleAsync(ScheduleDTO model)
         {
+
             var newSchedule = _mapper.Map<Schedule>(model);
             _context.Schedules!.Add(newSchedule);
             await _context.SaveChangesAsync();
@@ -39,6 +40,39 @@ namespace LMSSystem.Repositories
         {
             var Schedules = await _context.Schedules!.ToListAsync();
             return _mapper.Map<List<ScheduleDTO>>(Schedules);
+        }
+
+        public async Task<List<ScheduleDetailsDTO>> GetAllSchedulesDetailAsync()
+        {
+            var schedules = await _context.Schedules!.ToListAsync();
+
+            var scheduleDetailsDTOs = new List<ScheduleDetailsDTO>();
+            foreach (var schedule in schedules)
+            {
+                var scheduleDetailsDTO = new ScheduleDetailsDTO
+                {
+                    ScheduleID = schedule.ScheduleID,
+                    ScheduleDate = schedule.ScheduleDate,
+                    ClassName = await GetClassNameFromId(schedule.ClassID),
+                    CourseName = await GetCourseNameFromId(schedule.CourseID)
+                };
+
+                scheduleDetailsDTOs.Add(scheduleDetailsDTO);
+            }
+
+            return scheduleDetailsDTOs;
+        }
+
+        private async Task<string> GetClassNameFromId(int classId)
+        {
+            var classEntity = await _context.Classes.FindAsync(classId);
+            return classEntity?.ClassName;
+        }
+
+        private async Task<string> GetCourseNameFromId(int courseId)
+        {
+            var courseEntity = await _context.Courses.FindAsync(courseId);
+            return courseEntity?.CourseName;
         }
 
         public async Task<ScheduleDTO> GetScheduleAsync(int id)

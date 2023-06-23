@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LMSSystem.Data;
+using LMSSystem.Models;
 using LMSSystem.Repositories;
 using LMSSystem.Repositories.IRepository;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +31,8 @@ namespace LMSSystem.Helpers
             };
 
 
-            string roleName = await _role.GetRoleNameFromRoleId(user.RoleID);
+            RoleDTO role = await _role.GetRoleNameFromRoleId(user.RoleID);
+            string roleName = role.RoleName;
             if (!string.IsNullOrEmpty(roleName))
             {
                 claims.Add(new Claim(ClaimTypes.Role, roleName));
