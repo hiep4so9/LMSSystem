@@ -19,7 +19,7 @@ public class FirebaseStorageRepository : IFirebaseStorageRepository
         Console.WriteLine(credentialFilePath);
         Console.WriteLine(bucketName);
         Console.WriteLine(projectId);
-        //D:\repos\FlightDocsSystem\FlightDocsSystem\service-account.json
+        //F:\LMSSystem\Credentials\Credentials\credentials.json
         // Thay đổi đường dẫn này để trỏ đến tệp JSON của tài khoản dịch vụ
 
         // Khởi tạo Firebase Admin SDK với thông tin xác thực
@@ -31,9 +31,12 @@ public class FirebaseStorageRepository : IFirebaseStorageRepository
         string objectName = "";
         if (documentVersion == null)
         {
-            objectName = $"{Path.GetFileNameWithoutExtension(fileName)}{Path.GetExtension(fileName)}";
+            objectName = $"Materials/{Path.GetFileNameWithoutExtension(fileName)}{Path.GetExtension(fileName)}";
         }
-        objectName = $"{Path.GetFileNameWithoutExtension(fileName)}_{documentVersion}{Path.GetExtension(fileName)}";
+        else
+        {
+            objectName = $"Materials/{Path.GetFileNameWithoutExtension(fileName)}_{documentVersion}{Path.GetExtension(fileName)}";
+        }
         // Tải lên tệp tin lên Firebase Cloud Storage
         using (var memoryStream = new MemoryStream())
         {
@@ -45,4 +48,20 @@ public class FirebaseStorageRepository : IFirebaseStorageRepository
         // Trả về URL của tệp tin đã tải lên
         return $"https://storage.googleapis.com/{bucketName}/{objectName}?readOnly=true";
     }
+
+    public async Task<byte[]> DownloadFileAsync(string bucketName, string objectName)
+    {
+        // Khởi tạo Firebase Admin SDK với thông tin xác thực
+        var credentialFilePath = "..\\LMSSystem\\Credentials\\credentials.json";
+        var credential = GoogleCredential.FromFile(credentialFilePath);
+        var storageClient = await StorageClient.CreateAsync(credential);
+
+        // Tải xuống tệp tin từ Firebase Cloud Storage
+        using (var memoryStream = new MemoryStream())
+        {
+            await storageClient.DownloadObjectAsync(bucketName, objectName, memoryStream);
+            return memoryStream.ToArray();
+        }
+    }
+
 }

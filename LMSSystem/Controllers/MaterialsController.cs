@@ -69,6 +69,35 @@ namespace LMSSystem.Controllers
                     }
                 }*/
 
+        [HttpGet("download/{materialId}")]
+        public async Task<IActionResult> DownloadMaterial(int materialId)
+        {
+            try
+            {
+                var material = await _MaterialRepo.GetMaterialAsync(materialId);
+
+                if (material == null)
+                {
+                    return NotFound();
+                }
+
+                // Lấy tên tệp tin và tên bucket từ URL của tệp tin trên Firebase
+                var fileUrl = material.MaterialFile;
+                var bucketName = fileUrl.Split('/')[3];
+                var objectName = fileUrl.Substring(fileUrl.IndexOf(bucketName) + bucketName.Length + 1);
+
+                // Tải xuống tệp tin từ Firebase
+                var fileData = await _firebaseStorageService.DownloadFileAsync(bucketName, objectName);
+
+                // Trả về tệp tin đã tải xuống
+                return File(fileData, "application/octet-stream", material.MaterialTitle);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
 
 
 
