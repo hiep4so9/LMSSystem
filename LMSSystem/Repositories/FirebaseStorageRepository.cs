@@ -1,6 +1,7 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using LMSSystem.Repositories.IRepository;
+using Microsoft.AspNetCore.Mvc;
 
 public class FirebaseStorageRepository : IFirebaseStorageRepository
 {
@@ -10,7 +11,7 @@ public class FirebaseStorageRepository : IFirebaseStorageRepository
     {
         _configuration = configuration;
     }
-    public async Task<string> UploadFileAsync(IFormFile file, string? documentVersion)
+    public async Task<string> UploadFileAsync(IFormFile file, string? documentVersion, string dataName)
     {
 
         var projectId = _configuration["Firebase:ProjectId"];
@@ -31,11 +32,11 @@ public class FirebaseStorageRepository : IFirebaseStorageRepository
         string objectName = "";
         if (documentVersion == null)
         {
-            objectName = $"Materials/{Path.GetFileNameWithoutExtension(fileName)}{Path.GetExtension(fileName)}";
+            objectName = $"{dataName}/{Path.GetFileNameWithoutExtension(fileName)}{Path.GetExtension(fileName)}";
         }
         else
         {
-            objectName = $"Materials/{Path.GetFileNameWithoutExtension(fileName)}_{documentVersion}{Path.GetExtension(fileName)}";
+            objectName = $"{dataName}/{Path.GetFileNameWithoutExtension(fileName)}_{documentVersion}{Path.GetExtension(fileName)}";
         }
         // Tải lên tệp tin lên Firebase Cloud Storage
         using (var memoryStream = new MemoryStream())
@@ -46,7 +47,7 @@ public class FirebaseStorageRepository : IFirebaseStorageRepository
         }
 
         // Trả về URL của tệp tin đã tải lên
-        return $"https://storage.googleapis.com/{bucketName}/{objectName}?readOnly=true";
+        return $"https://firebasestorage.googleapis.com/v0/b/{bucketName}/o/{Uri.EscapeDataString(objectName)}?alt=media";
     }
 
     public async Task<byte[]> DownloadFileAsync(string bucketName, string objectName)

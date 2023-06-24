@@ -1,8 +1,7 @@
 ﻿using LMSSystem.Data;
 using LMSSystem.Helpers;
+using LMSSystem.Models;
 using LMSSystem.Repositories.IRepository;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMSSystem.Controllers
@@ -112,14 +111,13 @@ namespace LMSSystem.Controllers
                 }
 
                 var fileName = Path.GetFileName(file.FileName);
-                var fileUrl = await _firebaseStorageService.UploadFileAsync(file, null);
+                var fileUrl = await _firebaseStorageService.UploadFileAsync(file, null, "Material");
 
                 var model = new MaterialDTO
                 {
                     MaterialTitle = fileName,
                     MaterialFile = fileUrl,
                     CourseID = courseId,
-                    UploadDate = DateTime.Now
                 };
 
                 var newMaterialId = await _MaterialRepo.AddMaterialAsync(model);
@@ -134,16 +132,45 @@ namespace LMSSystem.Controllers
         }
 
 
-        [HttpPut("{id}")/*, Authorize(Roles = "Admin")*/]
-        public async Task<IActionResult> UpdateMaterial(int id, [FromBody] MaterialDTO model)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateMaterial(int id, IFormFile updatedFile, int courseId)
         {
-            if (id != model.MaterialID)
+            try
             {
-                return NotFound();
+                // Kiểm tra xem vật liệu có tồn tại trong cơ sở dữ liệu hay không
+                var existingMaterial = await _MaterialRepo.GetMaterialAsync(id);
+                if (existingMaterial == null)
+                {
+                    return NotFound();
+                }
+
+                // Nếu có tệp tin được gửi lên từ client, thực hiện quá trình tải lên và cập nhật URL tệp tin
+                string fileUrl = existingMaterial.MaterialFile;
+                if (updatedFile != null && updatedFile.Length > 0)
+                {
+                    var fileName = Path.GetFileName(updatedFile.FileName);
+                    fileUrl = await _firebaseStorageService.UploadFileAsync(updatedFile, null, "Material");
+
+                    // Cập nhật thông tin vật liệu
+                    existingMaterial.MaterialTitle = fileName;
+                    existingMaterial.MaterialFile = fileUrl;
+                }
+
+                existingMaterial.CourseID = courseId;
+
+                await _MaterialRepo.UpdateMaterialAsync(id, existingMaterial);
+
+                return Ok(existingMaterial);
             }
-            await _MaterialRepo.UpdateMaterialAsync(id, model);
-            return Ok();
+            catch
+            {
+                return BadRequest();
+            }
         }
+
+
+
+
 
         [HttpDelete("{id}")/*, Authorize(Roles = "Admin")*/]
         public async Task<IActionResult> DeleteMaterial([FromRoute] int id)

@@ -88,6 +88,24 @@
           }
         }
       },
+      "FirebaseAdmin/2.3.0": {
+        "type": "package",
+        "dependencies": {
+          "Google.Api.Gax.Rest": "3.2.0",
+          "Google.Apis.Auth": "1.49.0",
+          "System.Collections.Immutable": "1.7.1"
+        },
+        "compile": {
+          "lib/netstandard2.0/FirebaseAdmin.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/FirebaseAdmin.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Google.Api.Gax/4.4.0": {
         "type": "package",
         "dependencies": {
@@ -4139,6 +4157,21 @@
         "lib/netstandard2.0/BouncyCastle.Cryptography.dll",
         "lib/netstandard2.0/BouncyCastle.Cryptography.xml",
         "packageIcon.png"
+      ]
+    },
+    "FirebaseAdmin/2.3.0": {
+      "sha512": "ror9V68bFWdr3VXoCPQrAAJ1ZA8dyLzIHJvy53BmoD83Ze9VuWC9hPBicPqqOANP3VTMWnylC7xci59UEMuU4A==",
+      "type": "package",
+      "path": "firebaseadmin/2.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "firebaseadmin.2.3.0.nupkg.sha512",
+        "firebaseadmin.nuspec",
+        "lib/net461/FirebaseAdmin.dll",
+        "lib/net461/FirebaseAdmin.xml",
+        "lib/netstandard2.0/FirebaseAdmin.dll",
+        "lib/netstandard2.0/FirebaseAdmin.xml"
       ]
     },
     "Google.Api.Gax/4.4.0": {
@@ -11413,6 +11446,7 @@
   "projectFileDependencyGroups": {
     "net6.0": [
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 12.0.1",
+      "FirebaseAdmin >= 2.3.0",
       "Google.Apis.Auth >= 1.60.0",
       "Google.Cloud.Storage.V1 >= 4.6.0",
       "MailKit >= 4.1.0",
@@ -11434,11 +11468,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\LMSSystem\\LMSSystem.csproj",
+      "projectUniqueName": "F:\\ThucTap\\LMSSystem\\LMSSystem\\LMSSystem.csproj",
       "projectName": "LMSSystem",
-      "projectPath": "D:\\LMSSystem\\LMSSystem.csproj",
+      "projectPath": "F:\\ThucTap\\LMSSystem\\LMSSystem\\LMSSystem.csproj",
       "packagesPath": "C:\\Users\\hiep4\\.nuget\\packages\\",
-      "outputPath": "D:\\LMSSystem\\obj\\",
+      "outputPath": "F:\\ThucTap\\LMSSystem\\LMSSystem\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
@@ -11474,6 +11508,10 @@
           "AutoMapper.Extensions.Microsoft.DependencyInjection": {
             "target": "Package",
             "version": "[12.0.1, )"
+          },
+          "FirebaseAdmin": {
+            "target": "Package",
+            "version": "[2.3.0, )"
           },
           "Google.Apis.Auth": {
             "target": "Package",

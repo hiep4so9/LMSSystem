@@ -1,14 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "MvFi71hCoyq2vOyypv5aBgO9T4HVoBiU+Ws8dBEUTK0330ybf98pbZ/AHfvwG2FwJDlGC3FWvpFo4AFsLrcmng==",
+  "dgSpecHash": "Y2RK3/4mFjRPG2/sV9JPYMMmUMNF5xoxWtiAbXkWOMSlglG6Tj1YRdMiPwgHS68wdwNtaIJ1JOC215+/1c3sOw==",
   "success": true,
-  "projectFilePath": "D:\\LMSSystem\\LMSSystem.csproj",
+  "projectFilePath": "F:\\ThucTap\\LMSSystem\\LMSSystem\\LMSSystem.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hiep4\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\hiep4\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "C:\\Users\\hiep4\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\hiep4\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
     "C:\\Users\\hiep4\\.nuget\\packages\\bouncycastle.cryptography\\2.2.1\\bouncycastle.cryptography.2.2.1.nupkg.sha512",
+    "C:\\Users\\hiep4\\.nuget\\packages\\firebaseadmin\\2.3.0\\firebaseadmin.2.3.0.nupkg.sha512",
     "C:\\Users\\hiep4\\.nuget\\packages\\google.api.gax\\4.4.0\\google.api.gax.4.4.0.nupkg.sha512",
     "C:\\Users\\hiep4\\.nuget\\packages\\google.api.gax.rest\\4.4.0\\google.api.gax.rest.4.4.0.nupkg.sha512",
     "C:\\Users\\hiep4\\.nuget\\packages\\google.apis\\1.60.0\\google.apis.1.60.0.nupkg.sha512",

@@ -1183,3 +1183,4 @@ F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Google.Apis.Auth.dll
 F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Google.Apis.Core.dll
 F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Google.Apis.Storage.v1.dll
 F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Google.Cloud.Storage.V1.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\FirebaseAdmin.dll

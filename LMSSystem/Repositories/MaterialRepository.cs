@@ -49,12 +49,15 @@ namespace LMSSystem.Repositories
 
         public async Task UpdateMaterialAsync(int id, MaterialDTO model)
         {
-            if (id == model.MaterialID)
+            var updateMaterial = await _context.Materials.FindAsync(id);
+            if (updateMaterial == null)
             {
-                var updateMaterial = _mapper.Map<Material>(model);
-                _context.Materials!.Update(updateMaterial);
-                await _context.SaveChangesAsync();
+                return;
             }
+
+            _mapper.Map(model, updateMaterial);
+            await _context.SaveChangesAsync();
         }
+
     }
 }

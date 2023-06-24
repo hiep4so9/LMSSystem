@@ -17,7 +17,7 @@ namespace LMSSystem.Models
         public string? MaterialFile { get; set; }
 
         [Required]
-        public DateTime UploadDate { get; set; }
+        public DateTime UploadDate { get; set; } = DateTime.Now;
 
 
         public virtual Course? Course { get; set; }

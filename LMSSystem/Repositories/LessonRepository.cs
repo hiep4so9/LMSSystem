@@ -48,12 +48,14 @@ namespace LMSSystem.Repositories.IRepository
 
         public async Task UpdateLessonAsync(int id, LessonDTO model)
         {
-            if (id == model.LessonID)
+            var updateLessonl = await _context.Lessons.FindAsync(id);
+            if (updateLessonl == null)
             {
-                var updateLesson = _mapper.Map<Lesson>(model);
-                _context.Lessons!.Update(updateLesson);
-                await _context.SaveChangesAsync();
+                return;
             }
+
+            _mapper.Map(model, updateLessonl);
+            await _context.SaveChangesAsync();
         }
     }
 }
