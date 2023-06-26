@@ -47,6 +47,17 @@ namespace LMSSystem.Repositories
             return _mapper.Map<MaterialDTO>(Materials);
         }
 
+
+        public async Task<List<MaterialDTO>> GetMaterialByCourseAsync(int id)
+        {
+            var Materials = await _context.Materials
+                .Where(m => m.CourseID == id)
+                .ToListAsync();
+
+            return _mapper.Map<List<MaterialDTO>>(Materials);
+        }
+
+
         public async Task UpdateMaterialAsync(int id, MaterialDTO model)
         {
             var updateMaterial = await _context.Materials.FindAsync(id);

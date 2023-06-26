@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using LMSSystem.Data;
-using LMSSystem.Models;
 using AutoMapper;
 using LMSSystem.Repositories.IRepository;
-using Microsoft.AspNetCore.Authorization;
-using System.Data;
 using LMSSystem.Helpers;
 using LMSSystem.Prototypes;
 using HueFestivalTicketOnline.Helpers;
-using Microsoft.AspNetCore.Rewrite;
 
 namespace LMSSystem.Controllers
 {

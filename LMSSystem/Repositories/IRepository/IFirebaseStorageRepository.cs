@@ -4,5 +4,6 @@
     {
         Task<string> UploadFileAsync(IFormFile fileStream, string objectName, string controllerName);
         Task<byte[]> DownloadFileAsync(string bucketName, string objectName);
+        Task DeleteFileAsync(string bucketName, string objectName);
     }
 }

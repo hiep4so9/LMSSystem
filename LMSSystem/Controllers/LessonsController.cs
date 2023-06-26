@@ -53,20 +53,32 @@ namespace LMSSystem.Controllers
             return Lesson == null ? NotFound() : Ok(Lesson);
         }
 
-        /*        [HttpPost, Authorize]
-                public async Task<IActionResult> AddNewLesson(LessonDTO model)
+        [HttpGet("course/{courseId}")]
+        public async Task<IActionResult> GetLessonByCourseId(int courseId, int page = 1, int pageSize = 10)
+        {
+            try
+            {
+                var Lessons = await _LessonRepo.GetLessonByCourseAsync(courseId);
+                var paginatedLessons = Pagination.Paginate(Lessons, page, pageSize);
+
+                var totalLessons = Lessons.Count;
+                var totalPages = Pagination.CalculateTotalPages(totalLessons, pageSize);
+
+                var paginationInfo = new
                 {
-                    try
-                    {
-                        var newLessonId = await _LessonRepo.AddLessonAsync(model);
-                        var Lesson = await _LessonRepo.GetLessonAsync(newLessonId);
-                        return Lesson == null ? NotFound() : Ok(Lesson);
-                    }
-                    catch
-                    {
-                        return BadRequest();
-                    }
-                }*/
+                    TotalLessons = totalLessons,
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalPages = totalPages
+                };
+
+                return Ok(new { Lessons = paginatedLessons, Pagination = paginationInfo });
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
 
         [HttpGet("download/{LessonId}")]
         public async Task<IActionResult> DownloadLesson(int LessonId)
@@ -82,8 +94,9 @@ namespace LMSSystem.Controllers
 
                 // Lấy tên tệp tin và tên bucket từ URL của tệp tin trên Firebase
                 var fileUrl = Lesson.LessonContent;
-                var bucketName = fileUrl.Split('/')[3];
-                var objectName = fileUrl.Substring(fileUrl.IndexOf(bucketName) + bucketName.Length + 1);
+                Uri uri = new Uri(fileUrl);
+                string bucketName = uri.Segments[3].TrimEnd('/');
+                string objectName = Uri.UnescapeDataString(uri.Segments[5]);
 
                 // Tải xuống tệp tin từ Firebase
                 var fileData = await _firebaseStorageService.DownloadFileAsync(bucketName, objectName);
@@ -175,8 +188,33 @@ namespace LMSSystem.Controllers
         [HttpDelete("{id}")/*, Authorize(Roles = "Admin")*/]
         public async Task<IActionResult> DeleteLesson([FromRoute] int id)
         {
-            await _LessonRepo.DeleteLessonAsync(id);
-            return Ok();
+            try
+            {
+                var Lesson = await _LessonRepo.GetLessonAsync(id);
+
+                if (Lesson == null)
+                {
+                    return NotFound();
+                }
+
+                // Lấy tên tệp tin và tên bucket từ URL của tệp tin trên Firebase
+                var fileUrl = Lesson.LessonContent;
+                Uri uri = new Uri(fileUrl);
+                string bucketName = uri.Segments[3].TrimEnd('/');
+                string objectName = Uri.UnescapeDataString(uri.Segments[5]);
+
+                // Xóa tệp tin từ Firebase
+                await _firebaseStorageService.DeleteFileAsync(bucketName, objectName);
+
+                // Thực hiện các xử lý khác sau khi xóa tệp tin thành công (nếu cần)
+
+                return BadRequest("Delete success"); // Trả về Delete success khi xóa thành công
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi và trả về mã lỗi hoặc thông báo lỗi phù hợp
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

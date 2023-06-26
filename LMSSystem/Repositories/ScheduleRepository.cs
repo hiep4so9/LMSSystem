@@ -3,6 +3,7 @@ using LMSSystem.Data;
 using LMSSystem.Models;
 using LMSSystem.Repositories.IRepository;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace LMSSystem.Repositories
 {
@@ -54,7 +55,7 @@ namespace LMSSystem.Repositories
                     ScheduleID = schedule.ScheduleID,
                     ScheduleDate = schedule.ScheduleDate,
                     ClassName = await GetClassNameFromId(schedule.ClassID),
-                    CourseName = await GetCourseNameFromId(schedule.CourseID)
+                    CourseName = await GetCourseNameFromId(schedule.CourseID),
                 };
 
                 scheduleDetailsDTOs.Add(scheduleDetailsDTO);

@@ -52,17 +52,40 @@ public class FirebaseStorageRepository : IFirebaseStorageRepository
 
     public async Task<byte[]> DownloadFileAsync(string bucketName, string objectName)
     {
-        // Khởi tạo Firebase Admin SDK với thông tin xác thực
-        var credentialFilePath = "..\\LMSSystem\\Credentials\\credentials.json";
-        var credential = GoogleCredential.FromFile(credentialFilePath);
-        var storageClient = await StorageClient.CreateAsync(credential);
-
-        // Tải xuống tệp tin từ Firebase Cloud Storage
-        using (var memoryStream = new MemoryStream())
+        try
         {
-            await storageClient.DownloadObjectAsync(bucketName, objectName, memoryStream);
-            return memoryStream.ToArray();
+            // Đường dẫn tới tệp tin credentials.json
+            var credentialFilePath = "..\\LMSSystem\\Credentials\\credentials.json";
+
+            // Khởi tạo Firebase Admin SDK với thông tin xác thực
+            var credential = GoogleCredential.FromFile(credentialFilePath);
+            var storageClient = await StorageClient.CreateAsync(credential);
+
+            // Tải xuống tệp tin từ Firebase Cloud Storage
+            using (var memoryStream = new MemoryStream())
+            {
+                await storageClient.DownloadObjectAsync(bucketName, objectName, memoryStream);
+                return memoryStream.ToArray();
+            }
         }
+        catch (Exception ex)
+        {
+            // Xử lý lỗi và ném ngoại lệ để được xử lý ở lớp gọi
+            throw new Exception("Failed to download file.", ex);
+        }
+    }
+
+    public async Task DeleteFileAsync(string bucketName, string objectName)
+    {
+        // Đường dẫn đến tệp JSON của tài khoản dịch vụ
+        string credentialFilePath = "..\\LMSSystem\\Credentials\\credentials.json";
+
+        // Khởi tạo Firebase Admin SDK với thông tin xác thực
+        GoogleCredential credential = GoogleCredential.FromFile(credentialFilePath);
+        StorageClient storageClient = await StorageClient.CreateAsync(credential);
+
+        // Xóa tệp tin từ Firebase Cloud Storage
+        await storageClient.DeleteObjectAsync(bucketName, objectName);
     }
 
 }

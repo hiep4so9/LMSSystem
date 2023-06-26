@@ -11,5 +11,6 @@ namespace LMSSystem.Data
 
         public int CourseID { get; set; }
         public DateTime ScheduleDate { get; set; }
+
     }
 }

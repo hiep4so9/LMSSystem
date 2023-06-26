@@ -1184,3 +1184,5 @@ F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Google.Apis.Core.dll
 F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Google.Apis.Storage.v1.dll
 F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Google.Cloud.Storage.V1.dll
 F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\FirebaseAdmin.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Google.Apis.Calendar.v3.dll
+F:\ThucTap\LMSSystem\LMSSystem\bin\Debug\net6.0\Credentials\lmssystem-eb957-b12a979d5ba4.json

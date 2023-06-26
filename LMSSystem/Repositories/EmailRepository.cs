@@ -39,7 +39,7 @@ namespace LMSSystem.Repositories
             }
             using var smtp = new MailKit.Net.Smtp.SmtpClient();
             await smtp.ConnectAsync("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
-            await smtp.AuthenticateAsync("hiep4so9@gmail.com", "ijndbyqxenojhzcn");
+            await smtp.AuthenticateAsync("hiep4so9@gmail.com", "lqaudnwtyupkifiz");
             await smtp.SendAsync(email);
             await smtp.DisconnectAsync(true);
         }

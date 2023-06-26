@@ -1,8 +1,10 @@
 ﻿using LMSSystem.Data;
 using LMSSystem.Helpers;
 using LMSSystem.Models;
+using LMSSystem.Repositories;
 using LMSSystem.Repositories.IRepository;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing.Printing;
 
 namespace LMSSystem.Controllers
 {
@@ -53,20 +55,34 @@ namespace LMSSystem.Controllers
             return Material == null ? NotFound() : Ok(Material);
         }
 
-        /*        [HttpPost, Authorize]
-                public async Task<IActionResult> AddNewMaterial(MaterialDTO model)
+
+        [HttpGet("course/{courseId}")]
+        public async Task<IActionResult> GetMaterialByCourseId(int courseId, int page = 1, int pageSize = 10)
+        {
+            try
+            {
+                var materials = await _MaterialRepo.GetMaterialByCourseAsync(courseId);
+                var paginatedMaterials = Pagination.Paginate(materials, page, pageSize);
+
+                var totalMaterials = materials.Count;
+                var totalPages = Pagination.CalculateTotalPages(totalMaterials, pageSize);
+
+                var paginationInfo = new
                 {
-                    try
-                    {
-                        var newMaterialId = await _MaterialRepo.AddMaterialAsync(model);
-                        var Material = await _MaterialRepo.GetMaterialAsync(newMaterialId);
-                        return Material == null ? NotFound() : Ok(Material);
-                    }
-                    catch
-                    {
-                        return BadRequest();
-                    }
-                }*/
+                    TotalMaterials = totalMaterials,
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalPages = totalPages
+                };
+
+                return Ok(new { Materials = paginatedMaterials, Pagination = paginationInfo });
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
 
         [HttpGet("download/{materialId}")]
         public async Task<IActionResult> DownloadMaterial(int materialId)
@@ -82,21 +98,27 @@ namespace LMSSystem.Controllers
 
                 // Lấy tên tệp tin và tên bucket từ URL của tệp tin trên Firebase
                 var fileUrl = material.MaterialFile;
-                var bucketName = fileUrl.Split('/')[3];
-                var objectName = fileUrl.Substring(fileUrl.IndexOf(bucketName) + bucketName.Length + 1);
+                Uri uri = new Uri(fileUrl);
+                string bucketName = uri.Segments[3].TrimEnd('/');
+                string objectName = Uri.UnescapeDataString(uri.Segments[5]);
 
                 // Tải xuống tệp tin từ Firebase
                 var fileData = await _firebaseStorageService.DownloadFileAsync(bucketName, objectName);
 
+                if (fileData == null || fileData.Length == 0)
+                {
+                    return NotFound();
+                }
+
                 // Trả về tệp tin đã tải xuống
                 return File(fileData, "application/octet-stream", material.MaterialTitle);
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest();
+                // Xử lý lỗi và trả về mã lỗi hoặc thông báo lỗi phù hợp
+                return BadRequest(ex.Message);
             }
         }
-
 
 
 
@@ -175,8 +197,33 @@ namespace LMSSystem.Controllers
         [HttpDelete("{id}")/*, Authorize(Roles = "Admin")*/]
         public async Task<IActionResult> DeleteMaterial([FromRoute] int id)
         {
-            await _MaterialRepo.DeleteMaterialAsync(id);
-            return Ok();
+            try
+            {
+                var material = await _MaterialRepo.GetMaterialAsync(id);
+
+                if (material == null)
+                {
+                    return NotFound();
+                }
+
+                // Lấy tên tệp tin và tên bucket từ URL của tệp tin trên Firebase
+                var fileUrl = material.MaterialFile;
+                Uri uri = new Uri(fileUrl);
+                string bucketName = uri.Segments[3].TrimEnd('/');
+                string objectName = Uri.UnescapeDataString(uri.Segments[5]);
+
+                // Xóa tệp tin từ Firebase
+                await _firebaseStorageService.DeleteFileAsync(bucketName, objectName);
+
+                // Thực hiện các xử lý khác sau khi xóa tệp tin thành công (nếu cần)
+
+                return BadRequest("Delete success"); // Trả về Delete success khi xóa thành công
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi và trả về mã lỗi hoặc thông báo lỗi phù hợp
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

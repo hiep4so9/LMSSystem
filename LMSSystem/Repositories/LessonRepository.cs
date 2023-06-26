@@ -46,6 +46,15 @@ namespace LMSSystem.Repositories.IRepository
             return _mapper.Map<LessonDTO>(Lessons);
         }
 
+        public async Task<List<LessonDTO>> GetLessonByCourseAsync(int id)
+        {
+            var Lessons = await _context.Lessons
+                .Where(m => m.CourseID == id)
+                .ToListAsync();
+
+            return _mapper.Map<List<LessonDTO>>(Lessons);
+        }
+
         public async Task UpdateLessonAsync(int id, LessonDTO model)
         {
             var updateLessonl = await _context.Lessons.FindAsync(id);
