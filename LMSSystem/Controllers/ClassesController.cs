@@ -18,7 +18,7 @@ namespace LMSSystem.Controllers
             _ClassRepo = repo;
         }
 
-        [HttpGet,Authorize(Roles = "Admin")]
+        [HttpGet, Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllClasses(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try

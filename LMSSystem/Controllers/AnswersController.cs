@@ -60,7 +60,7 @@ namespace LMSSystem.Controllers
             return Answer == null ? NotFound() : Ok(Answer);
         }
 
-        [HttpPost/*, Authorize*/]
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddNewAnswer(AnswerDTO model)
         {
             try

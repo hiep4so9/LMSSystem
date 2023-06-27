@@ -55,6 +55,22 @@ namespace LMSSystem.Repositories
             return _mapper.Map<List<UserDTO>>(users);
         }
 
+        public async Task<List<UserDTO>> GetAlLUsersByRoleAsync(int id)
+        {
+            var users = await _context.Users
+                .Where(m => m.RoleID == id)
+                .ToListAsync();
+            return _mapper.Map<List<UserDTO>>(users);
+        }
+
+/*        public async Task<List<UserDTO>> GetAllStudentsAsync(int id)
+        {
+            var users = await _context.Users
+                .Where(m => m.RoleID == id)
+                .ToListAsync();
+            return _mapper.Map<List<UserDTO>>(users);
+        }*/
+
         public async Task<UserDTO> GetUserAsync(int id)
         {
             var users = await _context.Users!.FindAsync(id);

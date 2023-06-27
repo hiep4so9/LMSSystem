@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Drawing.Printing;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace LMSSystem.Controllers
 {
@@ -55,7 +56,7 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpGet("{id}") , Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetMaterialById(int id)
         {
             var Material = await _MaterialRepo.GetMaterialAsync(id);
@@ -64,11 +65,15 @@ namespace LMSSystem.Controllers
 
 
         [HttpGet("course/{courseId}"), Authorize(Roles = "Admin,Teacher,User")]
-        public async Task<IActionResult> GetMaterialByCourseId(int courseId, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetMaterialByCourseId(int courseId, int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
             {
                 var materials = await _MaterialRepo.GetMaterialByCourseAsync(courseId);
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    materials = materials.Where(u => u.MaterialTitle.Contains(keyword)).ToList();
+                }
                 var paginatedMaterials = Pagination.Paginate(materials, page, pageSize);
 
                 var totalMaterials = materials.Count;

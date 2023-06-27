@@ -88,7 +88,7 @@ namespace LMSSystem.Controllers
             return Ok();
         }
 
-        [HttpPut("{id}"), Authorize(Roles = "Admin,Teacher")]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> DeleteSchedule([FromRoute] int id)
         {
             await _ScheduleRepo.DeleteScheduleAsync(id);

@@ -65,6 +65,44 @@ namespace LMSSystem.Controllers
         }
 
 
+        [HttpGet("role/{roleId}"), Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAlLUsersByRole(int roleId, int page = 1, int pageSize = 10, string? keyword = null)
+        {
+            try
+            {
+                var allUsers = await _userRepo.GetAlLUsersByRoleAsync(roleId);
+
+                // Lọc danh sách người dùng dựa trên keyword
+
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    allUsers = allUsers.Where(u => u.Name.Contains(keyword) || u.Email.Contains(keyword)).ToList();
+                }
+                var paginatedUsers = Pagination.Paginate(allUsers, page, pageSize);
+
+                var totalUsers = allUsers.Count();
+                var totalPages = Pagination.CalculateTotalPages(totalUsers, pageSize);
+
+                var paginationInfo = new
+                {
+                    TotalUsers = totalUsers,
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalPages = totalPages
+                };
+
+                return Ok(new { Users = paginatedUsers, Pagination = paginationInfo });
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+
+
+
+
         [HttpGet("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserById(int id)
         {
@@ -123,7 +161,7 @@ namespace LMSSystem.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(string userName, string password)
         {
-            GenerateToken tokenGenerator = new GenerateToken(_configuration,_role);
+            GenerateToken tokenGenerator = new GenerateToken(_configuration, _role);
 
             if (!await _userRepo.CheckUserName(userName))
             {

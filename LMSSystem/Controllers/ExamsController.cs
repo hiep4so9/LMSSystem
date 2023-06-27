@@ -55,7 +55,7 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpGet, Authorize(Roles = "Admin,Teacher,User")]
+        [HttpGet("{id}"), Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetExamById(int id)
         {
             var Exam = await _ExamRepo.GetExamAsync(id);
@@ -148,7 +148,7 @@ namespace LMSSystem.Controllers
                     CourseID = courseId,
                     ExamType = "Trắc nghiệm",
                     Duration = TimeSpan.FromHours(1).Add(TimeSpan.FromMinutes(30))
-            };
+                };
 
                 var newExamId = await _ExamRepo.AddExamAsync(model);
                 var Exam = await _ExamRepo.GetExamAsync(newExamId);

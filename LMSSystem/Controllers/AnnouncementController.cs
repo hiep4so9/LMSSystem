@@ -1,4 +1,4 @@
-﻿    using LMSSystem.Data;
+﻿using LMSSystem.Data;
 using LMSSystem.Helpers;
 using LMSSystem.Repositories.IRepository;
 using Microsoft.AspNetCore.Authorization;
@@ -60,7 +60,7 @@ namespace LMSSystem.Controllers
             return Announcement == null ? NotFound() : Ok(Announcement);
         }
 
-        [HttpPost/*, Authorize*/]
+        [HttpPost, Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> AddNewAnnouncement(AnnouncementDTO model)
         {
             try

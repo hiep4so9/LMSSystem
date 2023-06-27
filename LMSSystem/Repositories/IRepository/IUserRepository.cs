@@ -5,6 +5,8 @@ namespace LMSSystem.Repositories.IRepository
     public interface IUserRepository
     {
         public Task<List<UserDTO>> GetAllUsersAsync();
+        public Task<List<UserDTO>> GetAlLUsersByRoleAsync(int id);
+/*        public Task<List<UserDTO>> GetAllStudentsAsync(int id);*/
         public Task<UserDTO> GetUserAsync(int id);
         public Task<int> AddUserAsync(UserDTO model);
         public Task UpdateUserAsync(int id, UserDTO model);

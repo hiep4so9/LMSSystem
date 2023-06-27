@@ -59,7 +59,7 @@ namespace LMSSystem.Controllers
             return Course == null ? NotFound() : Ok(Course);
         }
 
-        [HttpPost/*, Authorize*/]
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddNewCourse(CourseDTO model)
         {
             try
