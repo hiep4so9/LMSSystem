@@ -47,6 +47,16 @@ namespace LMSSystem.Repositories
             return _mapper.Map<AssignmentDTO>(Assignments);
         }
 
+
+        public async Task<List<AssignmentDTO>> GetAssignmentByCLassAsync(int id)
+        {
+            var Assignments = await _context.Assignments
+                .Where(m => m.ClassID == id)
+                .ToListAsync();
+
+            return _mapper.Map<List<AssignmentDTO>>(Assignments);
+        }
+
         public async Task UpdateAssignmentAsync(int id, AssignmentDTO model)
         {
             if (id == model.AssignmentID)

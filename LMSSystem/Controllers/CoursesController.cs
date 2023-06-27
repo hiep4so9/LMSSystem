@@ -19,11 +19,18 @@ namespace LMSSystem.Controllers
         }
 
         [HttpGet/*, Authorize(Roles = "Admin")*/]
-        public async Task<IActionResult> GetAllCourses(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllCourses(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
             {
                 var allCourses = await _CourseRepo.GetAllCoursesAsync();
+
+                // Lọc danh sách khóa học dựa trên keyword nếu keyword không null
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    allCourses = allCourses.Where(c => c.CourseName.Contains(keyword)).ToList();
+                }
+
                 var paginatedCourses = Pagination.Paginate(allCourses, page, pageSize);
 
                 var totalCourses = allCourses.Count;

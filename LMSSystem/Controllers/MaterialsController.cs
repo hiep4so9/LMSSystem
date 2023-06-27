@@ -22,11 +22,16 @@ namespace LMSSystem.Controllers
         }
 
         [HttpGet/*, Authorize(Roles = "Admin")*/]
-        public async Task<IActionResult> GetAllMaterials(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllMaterials(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
             {
                 var allMaterials = await _MaterialRepo.GetAllMaterialsAsync();
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    allMaterials = allMaterials.Where(u => u.MaterialTitle.Contains(keyword)).ToList();
+                }
+
                 var paginatedMaterials = Pagination.Paginate(allMaterials, page, pageSize);
 
                 var totalMaterials = allMaterials.Count;
@@ -133,7 +138,7 @@ namespace LMSSystem.Controllers
                 }
 
                 var fileName = Path.GetFileName(file.FileName);
-                var fileUrl = await _firebaseStorageService.UploadFileAsync(file, null, "Material");
+                var fileUrl = await _firebaseStorageService.UploadFileAsync(file, null, "Material", null);
 
                 var model = new MaterialDTO
                 {
@@ -171,7 +176,7 @@ namespace LMSSystem.Controllers
                 if (updatedFile != null && updatedFile.Length > 0)
                 {
                     var fileName = Path.GetFileName(updatedFile.FileName);
-                    fileUrl = await _firebaseStorageService.UploadFileAsync(updatedFile, null, "Material");
+                    fileUrl = await _firebaseStorageService.UploadFileAsync(updatedFile, null, "Material", null);
 
                     // Cập nhật thông tin vật liệu
                     existingMaterial.MaterialTitle = fileName;
@@ -214,6 +219,7 @@ namespace LMSSystem.Controllers
 
                 // Xóa tệp tin từ Firebase
                 await _firebaseStorageService.DeleteFileAsync(bucketName, objectName);
+                await _MaterialRepo.DeleteMaterialAsync(id);
 
                 // Thực hiện các xử lý khác sau khi xóa tệp tin thành công (nếu cần)
 

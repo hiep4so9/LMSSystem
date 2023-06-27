@@ -5,82 +5,85 @@ using LMSSystem.Repositories;
 using LMSSystem.Repositories.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing.Printing;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace LMSSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ExamsController : ControllerBase
+    public class AssignmentsController : ControllerBase
     {
-        private readonly IExamRepository _ExamRepo;
+        private readonly IAssignmentRepository _AssignmentRepo;
         private readonly IFirebaseStorageRepository _firebaseStorageService;
 
-        public ExamsController(IExamRepository repo, IFirebaseStorageRepository firebaseStorageService)
+        public AssignmentsController(IAssignmentRepository repo, IFirebaseStorageRepository firebaseStorageService)
         {
-            _ExamRepo = repo;
+            _AssignmentRepo = repo;
             _firebaseStorageService = firebaseStorageService;
         }
 
         [HttpGet/*, Authorize(Roles = "Admin")*/]
-        public async Task<IActionResult> GetAllExams(int page = 1, int pageSize = 10, string? keyword = null)
+        public async Task<IActionResult> GetAllAssignments(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
             {
-                var allExams = await _ExamRepo.GetAllExamsAsync();
+                var allAssignments = await _AssignmentRepo.GetAllAssignmentsAsync();
+
+                // Lọc danh sách bài tập dựa trên keyword nếu keyword không null
                 if (!string.IsNullOrEmpty(keyword))
                 {
-                    allExams = allExams.Where(e => e.ExamTitle.Contains(keyword)).ToList();
+                    allAssignments = allAssignments.Where(a => a.AssignmentTitle.Contains(keyword)).ToList();
                 }
-                var paginatedExams = Pagination.Paginate(allExams, page, pageSize);
 
-                var totalExams = allExams.Count;
-                var totalPages = Pagination.CalculateTotalPages(totalExams, pageSize);
+                var paginatedAssignments = Pagination.Paginate(allAssignments, page, pageSize);
+
+                var totalAssignments = allAssignments.Count;
+                var totalPages = Pagination.CalculateTotalPages(totalAssignments, pageSize);
 
                 var paginationInfo = new
                 {
-                    TotalExams = totalExams,
+                    TotalAssignments = totalAssignments,
                     Page = page,
                     PageSize = pageSize,
                     TotalPages = totalPages
                 };
 
-                return Ok(new { Exams = paginatedExams, Pagination = paginationInfo });
+                return Ok(new { Assignments = paginatedAssignments, Pagination = paginationInfo });
             }
             catch
             {
                 return BadRequest();
             }
         }
+
 
         [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
-        public async Task<IActionResult> GetExamById(int id)
+        public async Task<IActionResult> GetAssignmentById(int id)
         {
-            var Exam = await _ExamRepo.GetExamAsync(id);
-            return Exam == null ? NotFound() : Ok(Exam);
+            var Assignment = await _AssignmentRepo.GetAssignmentAsync(id);
+            return Assignment == null ? NotFound() : Ok(Assignment);
         }
 
 
-        [HttpGet("course/{courseId}")]
-        public async Task<IActionResult> GetExamByCourseId(int courseId, int page = 1, int pageSize = 10)
+        [HttpGet("class/{classId}")]
+        public async Task<IActionResult> GetAssignmentByCourseId(int classId, int page = 1, int pageSize = 10)
         {
             try
             {
-                var Exams = await _ExamRepo.GetExamByCourseAsync(courseId);
-                var paginatedExams = Pagination.Paginate(Exams, page, pageSize);
+                var Assignments = await _AssignmentRepo.GetAssignmentByCLassAsync(classId);
+                var paginatedAssignments = Pagination.Paginate(Assignments, page, pageSize);
 
-                var totalExams = Exams.Count;
-                var totalPages = Pagination.CalculateTotalPages(totalExams, pageSize);
+                var totalAssignments = Assignments.Count;
+                var totalPages = Pagination.CalculateTotalPages(totalAssignments, pageSize);
 
                 var paginationInfo = new
                 {
-                    TotalExams = totalExams,
+                    TotalAssignments = totalAssignments,
                     Page = page,
                     PageSize = pageSize,
                     TotalPages = totalPages
                 };
 
-                return Ok(new { Exams = paginatedExams, Pagination = paginationInfo });
+                return Ok(new { Assignments = paginatedAssignments, Pagination = paginationInfo });
             }
             catch
             {
@@ -89,20 +92,20 @@ namespace LMSSystem.Controllers
         }
 
 
-        [HttpGet("download/{ExamId}")]
-        public async Task<IActionResult> DownloadExam(int ExamId)
+        [HttpGet("download/{assignmentId}")]
+        public async Task<IActionResult> DownloadAssignment(int AssignmentId)
         {
             try
             {
-                var Exam = await _ExamRepo.GetExamAsync(ExamId);
+                var Assignment = await _AssignmentRepo.GetAssignmentAsync(AssignmentId);
 
-                if (Exam == null)
+                if (Assignment == null)
                 {
                     return NotFound();
                 }
 
                 // Lấy tên tệp tin và tên bucket từ URL của tệp tin trên Firebase
-                var fileUrl = Exam.ExamTitle;
+                var fileUrl = Assignment.AssignmentFile;
                 Uri uri = new Uri(fileUrl);
                 string bucketName = uri.Segments[3].TrimEnd('/');
                 string objectName = Uri.UnescapeDataString(uri.Segments[5]);
@@ -116,7 +119,7 @@ namespace LMSSystem.Controllers
                 }
 
                 // Trả về tệp tin đã tải xuống
-                return File(fileData, "application/octet-stream", Exam.ExamTitle);
+                return File(fileData, "application/octet-stream", Assignment.AssignmentTitle);
             }
             catch (Exception ex)
             {
@@ -128,7 +131,7 @@ namespace LMSSystem.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddNewExam(IFormFile file, int courseId)
+        public async Task<IActionResult> AddNewAssignment(IFormFile file, int classId)
         {
             try
             {
@@ -138,20 +141,20 @@ namespace LMSSystem.Controllers
                 }
 
                 var fileName = Path.GetFileName(file.FileName);
-                var fileUrl = await _firebaseStorageService.UploadFileAsync(file, null, "Exam", null);
+                var fileUrl = await _firebaseStorageService.UploadFileAsync(file, null, "Assignment", null);
 
-                var model = new ExamDTO
+                var model = new AssignmentDTO
                 {
-                    ExamTitle = fileUrl,
-                    CourseID = courseId,
-                    ExamType = "Trắc nghiệm",
-                    Duration = TimeSpan.FromHours(1).Add(TimeSpan.FromMinutes(30))
-            };
+                    AssignmentTitle = fileName,
+                    AssignmentFile = fileUrl,
+                    ClassID = classId,
+                    Deadline = DateTime.Now
+                };
 
-                var newExamId = await _ExamRepo.AddExamAsync(model);
-                var Exam = await _ExamRepo.GetExamAsync(newExamId);
+                var newAssignmentId = await _AssignmentRepo.AddAssignmentAsync(model);
+                var Assignment = await _AssignmentRepo.GetAssignmentAsync(newAssignmentId);
 
-                return Exam == null ? NotFound() : Ok(Exam);
+                return Assignment == null ? NotFound() : Ok(Assignment);
             }
             catch
             {
@@ -161,33 +164,34 @@ namespace LMSSystem.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateExam(int id, IFormFile updatedFile, int courseId)
+        public async Task<IActionResult> UpdateAssignment(int id, IFormFile updatedFile, int classId)
         {
             try
             {
                 // Kiểm tra xem vật liệu có tồn tại trong cơ sở dữ liệu hay không
-                var existingExam = await _ExamRepo.GetExamAsync(id);
-                if (existingExam == null)
+                var existingAssignment = await _AssignmentRepo.GetAssignmentAsync(id);
+                if (existingAssignment == null)
                 {
                     return NotFound();
                 }
 
                 // Nếu có tệp tin được gửi lên từ client, thực hiện quá trình tải lên và cập nhật URL tệp tin
-                string fileUrl = existingExam.ExamTitle;
+                string fileUrl = existingAssignment.AssignmentFile;
                 if (updatedFile != null && updatedFile.Length > 0)
                 {
                     var fileName = Path.GetFileName(updatedFile.FileName);
-                    fileUrl = await _firebaseStorageService.UploadFileAsync(updatedFile, null, "Exam", null);
+                    fileUrl = await _firebaseStorageService.UploadFileAsync(updatedFile, null, "Assignment", null);
 
                     // Cập nhật thông tin vật liệu
-                    existingExam.ExamTitle = fileUrl;
+                    existingAssignment.AssignmentTitle = fileName;
+                    existingAssignment.AssignmentFile = fileUrl;
                 }
 
-                existingExam.CourseID = courseId;
+                existingAssignment.ClassID = classId;
 
-                await _ExamRepo.UpdateExamAsync(id, existingExam);
+                await _AssignmentRepo.UpdateAssignmentAsync(id, existingAssignment);
 
-                return Ok(existingExam);
+                return Ok(existingAssignment);
             }
             catch
             {
@@ -200,19 +204,19 @@ namespace LMSSystem.Controllers
 
 
         [HttpDelete("{id}")/*, Authorize(Roles = "Admin")*/]
-        public async Task<IActionResult> DeleteExam([FromRoute] int id)
+        public async Task<IActionResult> DeleteAssignment([FromRoute] int id)
         {
             try
             {
-                var Exam = await _ExamRepo.GetExamAsync(id);
+                var Assignment = await _AssignmentRepo.GetAssignmentAsync(id);
 
-                if (Exam == null)
+                if (Assignment == null)
                 {
                     return NotFound();
                 }
 
                 // Lấy tên tệp tin và tên bucket từ URL của tệp tin trên Firebase
-                var fileUrl = Exam.ExamTitle;
+                var fileUrl = Assignment.AssignmentFile;
                 Uri uri = new Uri(fileUrl);
                 string bucketName = uri.Segments[3].TrimEnd('/');
                 string objectName = Uri.UnescapeDataString(uri.Segments[5]);

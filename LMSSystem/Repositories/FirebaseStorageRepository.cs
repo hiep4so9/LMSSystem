@@ -11,7 +11,7 @@ public class FirebaseStorageRepository : IFirebaseStorageRepository
     {
         _configuration = configuration;
     }
-    public async Task<string> UploadFileAsync(IFormFile file, string? documentVersion, string dataName)
+    public async Task<string> UploadFileAsync(IFormFile file, string? documentVersion, string dataName, string data)
     {
 
         var projectId = _configuration["Firebase:ProjectId"];
@@ -30,13 +30,13 @@ public class FirebaseStorageRepository : IFirebaseStorageRepository
         // Tạo tên tệp tin duy nhất
         var fileName = Path.GetFileName(file.FileName);
         string objectName = "";
-        if (documentVersion == null)
+        if (documentVersion == null && data == null)
         {
             objectName = $"{dataName}/{Path.GetFileNameWithoutExtension(fileName)}{Path.GetExtension(fileName)}";
         }
         else
         {
-            objectName = $"{dataName}/{Path.GetFileNameWithoutExtension(fileName)}_{documentVersion}{Path.GetExtension(fileName)}";
+            objectName = $"{dataName}/{data}/{Path.GetFileNameWithoutExtension(fileName)}{Path.GetExtension(fileName)}";
         }
         // Tải lên tệp tin lên Firebase Cloud Storage
         using (var memoryStream = new MemoryStream())

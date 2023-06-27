@@ -19,11 +19,18 @@ namespace LMSSystem.Controllers
         }
 
         [HttpGet/*, Authorize(Roles = "Admin")*/]
-        public async Task<IActionResult> GetAllAnswers(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllAnswers(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
             {
                 var allAnswers = await _AnswerRepo.GetAllAnswersAsync();
+
+                // Lọc danh sách câu trả lời dựa trên keyword nếu keyword không null
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    allAnswers = allAnswers.Where(a => a.AnswerContent.Contains(keyword)).ToList();
+                }
+
                 var paginatedAnswers = Pagination.Paginate(allAnswers, page, pageSize);
 
                 var totalAnswers = allAnswers.Count;
@@ -44,6 +51,7 @@ namespace LMSSystem.Controllers
                 return BadRequest();
             }
         }
+
 
         [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
         public async Task<IActionResult> GetAnswerById(int id)

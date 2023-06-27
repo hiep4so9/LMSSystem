@@ -4,6 +4,7 @@ using LMSSystem.Repositories.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace LMSSystem.Controllers
 {
@@ -19,11 +20,19 @@ namespace LMSSystem.Controllers
         }
 
         [HttpGet/*, Authorize(Roles = "Admin")*/]
-        public async Task<IActionResult> GetAllSchedulesDetailAsync(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllSchedulesDetailAsync(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
             {
                 var allSchedules = await _ScheduleRepo.GetAllSchedulesDetailAsync();
+
+                // Lọc danh sách lịch trình dựa trên keyword nếu keyword không null
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    allSchedules = allSchedules.Where(u => u.ClassName.Contains(keyword) || u.CourseName.Contains(keyword)).ToList();
+
+                }
+
                 var paginatedSchedules = Pagination.Paginate(allSchedules, page, pageSize);
 
                 var totalSchedules = allSchedules.Count;
@@ -44,6 +53,7 @@ namespace LMSSystem.Controllers
                 return BadRequest();
             }
         }
+
 
         [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
         public async Task<IActionResult> GetScheduleById(int id)

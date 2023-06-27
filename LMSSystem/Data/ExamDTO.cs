@@ -7,7 +7,7 @@ namespace LMSSystem.Data
     {
         public int ExamID { get; set; }
 
-        public int ClassID { get; set; }
+        public int CourseID { get; set; }
 
         public string ExamTitle { get; set; } = string.Empty;
 

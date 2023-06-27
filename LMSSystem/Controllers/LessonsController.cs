@@ -20,11 +20,15 @@ namespace LMSSystem.Controllers
         }
 
         [HttpGet/*, Authorize(Roles = "Admin")*/]
-        public async Task<IActionResult> GetAllLessons(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllLessons(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
             {
                 var allLessons = await _LessonRepo.GetAllLessonsAsync();
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    allLessons = allLessons.Where(u => u.LessonTitle.Contains(keyword) || u.LessonContent.Contains(keyword)).ToList();
+                }
                 var paginatedLessons = Pagination.Paginate(allLessons, page, pageSize);
 
                 var totalLessons = allLessons.Count;
@@ -124,7 +128,7 @@ namespace LMSSystem.Controllers
                 }
 
                 var fileName = Path.GetFileName(file.FileName);
-                var fileUrl = await _firebaseStorageService.UploadFileAsync(file, null, "Lesson");
+                var fileUrl = await _firebaseStorageService.UploadFileAsync(file, null, "Lesson", null);
 
                 var model = new LessonDTO
                 {
@@ -162,7 +166,7 @@ namespace LMSSystem.Controllers
                 if (updatedFile != null && updatedFile.Length > 0)
                 {
                     var fileName = Path.GetFileName(updatedFile.FileName);
-                    fileUrl = await _firebaseStorageService.UploadFileAsync(updatedFile, null, "Lesson");
+                    fileUrl = await _firebaseStorageService.UploadFileAsync(updatedFile, null, "Lesson", null);
 
                     // Cập nhật thông tin vật liệu
                     existingLesson.LessonTitle = fileName;
@@ -206,7 +210,9 @@ namespace LMSSystem.Controllers
                 // Xóa tệp tin từ Firebase
                 await _firebaseStorageService.DeleteFileAsync(bucketName, objectName);
 
+
                 // Thực hiện các xử lý khác sau khi xóa tệp tin thành công (nếu cần)
+                await _LessonRepo.DeleteLessonAsync(id);
 
                 return BadRequest("Delete success"); // Trả về Delete success khi xóa thành công
             }

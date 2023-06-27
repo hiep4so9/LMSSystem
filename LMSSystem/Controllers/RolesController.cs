@@ -19,11 +19,15 @@ namespace LMSSystem.Controllers
         }
 
         [HttpGet/*, Authorize(Roles = "Admin")*/]
-        public async Task<IActionResult> GetAllRoles(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllRoles(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
             {
                 var allRoles = await _RoleRepo.GetAllRolesAsync();
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    allRoles = allRoles.Where(u => u.RoleName.Contains(keyword)).ToList();
+                }
                 var paginatedRoles = Pagination.Paginate(allRoles, page, pageSize);
 
                 var totalRoles = allRoles.Count;

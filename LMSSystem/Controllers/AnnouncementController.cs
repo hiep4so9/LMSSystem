@@ -19,11 +19,18 @@ namespace LMSSystem.Controllers
         }
 
         [HttpGet/*, Authorize(Roles = "Admin")*/]
-        public async Task<IActionResult> GetAllAnnouncements(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllAnnouncements(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
             {
                 var allAnnouncements = await _AnnouncementRepo.GetAllAnnouncementsAsync();
+
+                // Lọc danh sách thông báo dựa trên keyword nếu keyword không null
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    allAnnouncements = allAnnouncements.Where(a => a.AnnouncementContent.Contains(keyword)).ToList();
+                }
+
                 var paginatedAnnouncements = Pagination.Paginate(allAnnouncements, page, pageSize);
 
                 var totalAnnouncements = allAnnouncements.Count;
@@ -44,6 +51,7 @@ namespace LMSSystem.Controllers
                 return BadRequest();
             }
         }
+
 
         [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
         public async Task<IActionResult> GetAnnouncementById(int id)

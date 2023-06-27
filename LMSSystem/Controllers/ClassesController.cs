@@ -19,31 +19,39 @@ namespace LMSSystem.Controllers
         }
 
         [HttpGet,Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAllClasses(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllClasses(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
             {
-                var allClasss = await _ClassRepo.GetAllClassesAsync();
-                var paginatedClasss = Pagination.Paginate(allClasss, page, pageSize);
+                var allClasses = await _ClassRepo.GetAllClassesAsync();
 
-                var totalClasss = allClasss.Count;
-                var totalPages = Pagination.CalculateTotalPages(totalClasss, pageSize);
+                // Lọc danh sách lớp dựa trên keyword nếu keyword không null
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    allClasses = allClasses.Where(c => c.ClassName.Contains(keyword)).ToList();
+                }
+
+                var paginatedClasses = Pagination.Paginate(allClasses, page, pageSize);
+
+                var totalClasses = allClasses.Count;
+                var totalPages = Pagination.CalculateTotalPages(totalClasses, pageSize);
 
                 var paginationInfo = new
                 {
-                    TotalClasss = totalClasss,
+                    TotalClasses = totalClasses,
                     Page = page,
                     PageSize = pageSize,
                     TotalPages = totalPages
                 };
 
-                return Ok(new { Classs = paginatedClasss, Pagination = paginationInfo });
+                return Ok(new { Classes = paginatedClasses, Pagination = paginationInfo });
             }
             catch
             {
                 return BadRequest();
             }
         }
+
 
         [HttpGet("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetClassById(int id)

@@ -47,6 +47,15 @@ namespace LMSSystem.Repositories
             return _mapper.Map<QuestionDTO>(Questions);
         }
 
+        public async Task<List<QuestionDTO>> GetQuestionByExamAsync(int id)
+        {
+            var Questions = await _context.Questions
+                .Where(m => m.ExamID == id)
+                .ToListAsync();
+
+            return _mapper.Map<List<QuestionDTO>>(Questions);
+        }
+
         public async Task UpdateQuestionAsync(int id, QuestionDTO model)
         {
             if (id == model.QuestionID)

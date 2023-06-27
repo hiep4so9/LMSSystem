@@ -5,6 +5,7 @@ using LMSSystem.Repositories.IRepository;
 using LMSSystem.Helpers;
 using LMSSystem.Prototypes;
 using HueFestivalTicketOnline.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LMSSystem.Controllers
 {
@@ -30,14 +31,21 @@ namespace LMSSystem.Controllers
 
         // GET: api/Users
         [HttpGet/*, Authorize(Roles = "Admin")*/]
-        public async Task<IActionResult> GetAllUsers(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllUsers(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
             {
                 var allUsers = await _userRepo.GetAllUsersAsync();
+
+                // Lọc danh sách người dùng dựa trên keyword
+
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    allUsers = allUsers.Where(u => u.Name.Contains(keyword) || u.Email.Contains(keyword)).ToList();
+                }
                 var paginatedUsers = Pagination.Paginate(allUsers, page, pageSize);
 
-                var totalUsers = allUsers.Count;
+                var totalUsers = allUsers.Count();
                 var totalPages = Pagination.CalculateTotalPages(totalUsers, pageSize);
 
                 var paginationInfo = new
@@ -55,6 +63,7 @@ namespace LMSSystem.Controllers
                 return BadRequest();
             }
         }
+
 
         [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
         public async Task<IActionResult> GetUserById(int id)

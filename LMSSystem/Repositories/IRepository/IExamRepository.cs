@@ -6,6 +6,7 @@ namespace LMSSystem.Repositories.IRepository
     {
         public Task<List<ExamDTO>> GetAllExamsAsync();
         public Task<ExamDTO> GetExamAsync(int id);
+        public Task<List<ExamDTO>> GetExamByCourseAsync(int id);
         public Task<int> AddExamAsync(ExamDTO model);
         public Task UpdateExamAsync(int id, ExamDTO model);
         public Task DeleteExamAsync(int id);
