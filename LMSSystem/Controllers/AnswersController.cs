@@ -18,7 +18,7 @@ namespace LMSSystem.Controllers
             _AnswerRepo = repo;
         }
 
-        [HttpGet/*, Authorize(Roles = "Admin")*/]
+        [HttpGet, Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllAnswers(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
@@ -53,7 +53,7 @@ namespace LMSSystem.Controllers
         }
 
 
-        [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpGet("{id}"), Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetAnswerById(int id)
         {
             var Answer = await _AnswerRepo.GetAnswerAsync(id);
@@ -75,7 +75,7 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpPut("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAnswer(int id, [FromBody] AnswerDTO model)
         {
             if (id != model.AnswerID)
@@ -86,7 +86,7 @@ namespace LMSSystem.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAnswer([FromRoute] int id)
         {
             await _AnswerRepo.DeleteAnswerAsync(id);

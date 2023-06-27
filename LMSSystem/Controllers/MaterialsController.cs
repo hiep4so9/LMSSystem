@@ -3,7 +3,9 @@ using LMSSystem.Helpers;
 using LMSSystem.Models;
 using LMSSystem.Repositories;
 using LMSSystem.Repositories.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Drawing.Printing;
 
 namespace LMSSystem.Controllers
@@ -21,7 +23,7 @@ namespace LMSSystem.Controllers
             _firebaseStorageService = firebaseStorageService;
         }
 
-        [HttpGet/*, Authorize(Roles = "Admin")*/]
+        [HttpGet, Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetAllMaterials(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
@@ -61,7 +63,7 @@ namespace LMSSystem.Controllers
         }
 
 
-        [HttpGet("course/{courseId}")]
+        [HttpGet("course/{courseId}"), Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetMaterialByCourseId(int courseId, int page = 1, int pageSize = 10)
         {
             try
@@ -89,7 +91,7 @@ namespace LMSSystem.Controllers
         }
 
 
-        [HttpGet("download/{materialId}")]
+        [HttpGet("download/{materialId}"), Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> DownloadMaterial(int materialId)
         {
             try
@@ -127,7 +129,7 @@ namespace LMSSystem.Controllers
 
 
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> AddNewMaterial(IFormFile file, int courseId)
         {
             try
@@ -159,7 +161,7 @@ namespace LMSSystem.Controllers
         }
 
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> UpdateMaterial(int id, IFormFile updatedFile, int courseId)
         {
             try
@@ -196,10 +198,7 @@ namespace LMSSystem.Controllers
         }
 
 
-
-
-
-        [HttpDelete("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> DeleteMaterial([FromRoute] int id)
         {
             try

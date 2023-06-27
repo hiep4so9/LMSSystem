@@ -3,7 +3,9 @@ using LMSSystem.Helpers;
 using LMSSystem.Models;
 using LMSSystem.Repositories;
 using LMSSystem.Repositories.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Drawing.Printing;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
@@ -22,7 +24,7 @@ namespace LMSSystem.Controllers
             _firebaseStorageService = firebaseStorageService;
         }
 
-        [HttpGet/*, Authorize(Roles = "Admin")*/]
+        [HttpGet, Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetAllExams(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
@@ -53,7 +55,7 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpGet, Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetExamById(int id)
         {
             var Exam = await _ExamRepo.GetExamAsync(id);
@@ -61,7 +63,7 @@ namespace LMSSystem.Controllers
         }
 
 
-        [HttpGet("course/{courseId}")]
+        [HttpGet("course/{courseId}"), Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetExamByCourseId(int courseId, int page = 1, int pageSize = 10)
         {
             try
@@ -89,7 +91,7 @@ namespace LMSSystem.Controllers
         }
 
 
-        [HttpGet("download/{ExamId}")]
+        [HttpGet("download/{ExamId}"), Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> DownloadExam(int ExamId)
         {
             try
@@ -127,7 +129,7 @@ namespace LMSSystem.Controllers
 
 
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> AddNewExam(IFormFile file, int courseId)
         {
             try
@@ -160,7 +162,7 @@ namespace LMSSystem.Controllers
         }
 
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> UpdateExam(int id, IFormFile updatedFile, int courseId)
         {
             try
@@ -199,7 +201,7 @@ namespace LMSSystem.Controllers
 
 
 
-        [HttpDelete("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> DeleteExam([FromRoute] int id)
         {
             try

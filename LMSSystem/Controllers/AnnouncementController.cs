@@ -1,4 +1,4 @@
-﻿using LMSSystem.Data;
+﻿    using LMSSystem.Data;
 using LMSSystem.Helpers;
 using LMSSystem.Repositories.IRepository;
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +18,7 @@ namespace LMSSystem.Controllers
             _AnnouncementRepo = repo;
         }
 
-        [HttpGet/*, Authorize(Roles = "Admin")*/]
+        [HttpGet, Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllAnnouncements(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
@@ -53,7 +53,7 @@ namespace LMSSystem.Controllers
         }
 
 
-        [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpGet("{id}"), Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetAnnouncementById(int id)
         {
             var Announcement = await _AnnouncementRepo.GetAnnouncementAsync(id);
@@ -75,7 +75,7 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpPut("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAnnouncement(int id, [FromBody] AnnouncementDTO model)
         {
             if (id != model.AnnouncementID)
@@ -86,7 +86,7 @@ namespace LMSSystem.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAnnouncement([FromRoute] int id)
         {
             await _AnnouncementRepo.DeleteAnnouncementAsync(id);

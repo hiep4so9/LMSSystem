@@ -18,7 +18,7 @@ namespace LMSSystem.Controllers
             _CourseRepo = repo;
         }
 
-        [HttpGet/*, Authorize(Roles = "Admin")*/]
+        [HttpGet, Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllCourses(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
@@ -52,7 +52,7 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpGet("{id}"), Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetCourseById(int id)
         {
             var Course = await _CourseRepo.GetCourseAsync(id);
@@ -74,7 +74,7 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpPut("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCourse(int id, [FromBody] CourseDTO model)
         {
             if (id != model.CourseID)
@@ -85,7 +85,7 @@ namespace LMSSystem.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCourse([FromRoute] int id)
         {
             await _CourseRepo.DeleteCourseAsync(id);

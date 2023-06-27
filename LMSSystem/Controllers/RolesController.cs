@@ -18,7 +18,7 @@ namespace LMSSystem.Controllers
             _RoleRepo = repo;
         }
 
-        [HttpGet/*, Authorize(Roles = "Admin")*/]
+        [HttpGet, Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllRoles(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
@@ -49,14 +49,14 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpGet("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetRoleById(int id)
         {
             var Role = await _RoleRepo.GetRoleAsync(id);
             return Role == null ? NotFound() : Ok(Role);
         }
 
-        [HttpPost/*, Authorize*/]
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddNewRole(RoleDTO model)
         {
             try
@@ -71,7 +71,7 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpPut("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateRole(int id, [FromBody] RoleDTO model)
         {
             if (id != model.RoleID)
@@ -82,7 +82,7 @@ namespace LMSSystem.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteRole([FromRoute] int id)
         {
             await _RoleRepo.DeleteRoleAsync(id);

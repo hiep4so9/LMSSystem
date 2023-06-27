@@ -53,7 +53,7 @@ namespace LMSSystem.Controllers
         }
 
 
-        [HttpGet("{id}"), Authorize(Roles = "Admin")]
+        [HttpGet("{id}"), Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetClassById(int id)
         {
             var Class = await _ClassRepo.GetClassAsync(id);
@@ -75,7 +75,7 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpPut("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateClass(int id, [FromBody] ClassDTO model)
         {
             if (id != model.ClassID)
@@ -86,7 +86,7 @@ namespace LMSSystem.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteClass([FromRoute] int id)
         {
             await _ClassRepo.DeleteClassAsync(id);

@@ -19,7 +19,7 @@ namespace LMSSystem.Controllers
             _ScheduleRepo = repo;
         }
 
-        [HttpGet/*, Authorize(Roles = "Admin")*/]
+        [HttpGet, Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetAllSchedulesDetailAsync(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
@@ -55,14 +55,14 @@ namespace LMSSystem.Controllers
         }
 
 
-        [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpGet("{id}"), Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetScheduleById(int id)
         {
             var Schedule = await _ScheduleRepo.GetScheduleAsync(id);
             return Schedule == null ? NotFound() : Ok(Schedule);
         }
 
-        [HttpPost/*, Authorize*/]
+        [HttpPost, Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> AddNewSchedule(ScheduleDTO model)
         {
             try
@@ -77,7 +77,7 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpPut("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpPut("{id}"), Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> UpdateSchedule(int id, [FromBody] ScheduleDTO model)
         {
             if (id != model.ScheduleID)
@@ -88,7 +88,7 @@ namespace LMSSystem.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpPut("{id}"), Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> DeleteSchedule([FromRoute] int id)
         {
             await _ScheduleRepo.DeleteScheduleAsync(id);

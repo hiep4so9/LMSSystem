@@ -30,7 +30,7 @@ namespace LMSSystem.Controllers
         }
 
         // GET: api/Users
-        [HttpGet/*, Authorize(Roles = "Admin")*/]
+        [HttpGet, Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
@@ -65,7 +65,7 @@ namespace LMSSystem.Controllers
         }
 
 
-        [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpGet("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserById(int id)
         {
             var user = await _userRepo.GetUserAsync(id);
@@ -171,7 +171,7 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpPut("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDTO model)
         {
             if (id != model.UserID)
@@ -182,7 +182,7 @@ namespace LMSSystem.Controllers
             return Ok();
         }
 
-        [HttpPost("verify")]
+        [HttpPost("verify"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> Verify(string token)
         {
 

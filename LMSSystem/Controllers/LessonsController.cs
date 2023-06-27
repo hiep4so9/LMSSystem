@@ -2,7 +2,9 @@
 using LMSSystem.Helpers;
 using LMSSystem.Models;
 using LMSSystem.Repositories.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace LMSSystem.Controllers
 {
@@ -19,7 +21,7 @@ namespace LMSSystem.Controllers
             _firebaseStorageService = firebaseStorageService;
         }
 
-        [HttpGet/*, Authorize(Roles = "Admin")*/]
+        [HttpGet, Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetAllLessons(int page = 1, int pageSize = 10, string? keyword = null)
         {
             try
@@ -50,14 +52,14 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpGet("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpGet("{id}"), Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetLessonById(int id)
         {
             var Lesson = await _LessonRepo.GetLessonAsync(id);
             return Lesson == null ? NotFound() : Ok(Lesson);
         }
 
-        [HttpGet("course/{courseId}")]
+        [HttpGet("course/{courseId}"), Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> GetLessonByCourseId(int courseId, int page = 1, int pageSize = 10)
         {
             try
@@ -84,7 +86,7 @@ namespace LMSSystem.Controllers
             }
         }
 
-        [HttpGet("download/{LessonId}")]
+        [HttpGet("download/{LessonId}"), Authorize(Roles = "Admin,Teacher,User")]
         public async Task<IActionResult> DownloadLesson(int LessonId)
         {
             try
@@ -117,7 +119,7 @@ namespace LMSSystem.Controllers
 
 
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> AddNewLesson(IFormFile file, int courseId)
         {
             try
@@ -149,7 +151,7 @@ namespace LMSSystem.Controllers
         }
 
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> UpdateLesson(int id, IFormFile updatedFile, int courseId)
         {
             try
@@ -189,7 +191,7 @@ namespace LMSSystem.Controllers
 
 
 
-        [HttpDelete("{id}")/*, Authorize(Roles = "Admin")*/]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> DeleteLesson([FromRoute] int id)
         {
             try
