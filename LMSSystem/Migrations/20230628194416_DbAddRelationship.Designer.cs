@@ -4,6 +4,7 @@ using LMSSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMSSystem.Migrations
 {
     [DbContext(typeof(SchoolContext))]
-    partial class SchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20230628194416_DbAddRelationship")]
+    partial class DbAddRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -479,9 +481,19 @@ namespace LMSSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ScheduleID1")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserID1")
+                        .HasColumnType("int");
+
                     b.HasKey("UserID", "ScheduleID");
 
                     b.HasIndex("ScheduleID");
+
+                    b.HasIndex("ScheduleID1");
+
+                    b.HasIndex("UserID1");
 
                     b.ToTable("User_Schedule");
                 });
@@ -671,16 +683,24 @@ namespace LMSSystem.Migrations
             modelBuilder.Entity("LMSSystem.Models.User_Schedule", b =>
                 {
                     b.HasOne("LMSSystem.Models.Schedule", "Schedule")
-                        .WithMany("User_Schedule")
+                        .WithMany()
                         .HasForeignKey("ScheduleID")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("LMSSystem.Models.User", "User")
+                    b.HasOne("LMSSystem.Models.Schedule", null)
                         .WithMany("User_Schedule")
+                        .HasForeignKey("ScheduleID1");
+
+                    b.HasOne("LMSSystem.Models.User", "User")
+                        .WithMany()
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("LMSSystem.Models.User", null)
+                        .WithMany("User_Schedule")
+                        .HasForeignKey("UserID1");
 
                     b.Navigation("Schedule");
 

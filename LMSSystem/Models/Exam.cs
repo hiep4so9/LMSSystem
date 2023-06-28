@@ -20,5 +20,7 @@ namespace LMSSystem.Models
         [Required]
         public TimeSpan Duration { get; set; }
         public virtual Course? Course { get; set; }
+        public virtual ICollection<Question>? Questions { get; set; }
+        public virtual ICollection<Exam_User>? Exam_User { get; set; }
     }
 }

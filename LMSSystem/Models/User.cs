@@ -48,9 +48,13 @@ namespace LMSSystem.Models
         public DateTime? RefreshTokenExpries { get; set; }
 
         public DateTime? CreateAt { get; set; }
-
         public DateTime? UpdateAt { get; set; }
 
         public virtual Role? Role { get; set; }
+        public ICollection<Announcement>? Announcements { get; set; }
+        public ICollection<Exam_User>? Exam_User { get; set; }
+        public ICollection<Feedback>? Feedbacks { get; set; }
+        public ICollection<User_Schedule>? User_Schedule { get; set; }
+        public ICollection<User_Class>? User_Class { get; set; }
     }
 }

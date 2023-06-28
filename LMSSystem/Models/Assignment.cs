@@ -20,5 +20,6 @@ namespace LMSSystem.Models
         public DateTime Deadline { get; set; }
 
         public virtual Class? Class { get; set; }
+        public virtual ICollection<Class>? Classes { get; set; }
     }
 }

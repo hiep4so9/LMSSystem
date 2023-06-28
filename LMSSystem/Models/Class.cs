@@ -10,5 +10,8 @@ namespace LMSSystem.Models
 
         [Required]
         public string? ClassName { get; set; }
+        public ICollection<Schedule>? Schedules { get; set; }
+        public ICollection<Assignment>? Assignments { get; set; }
+        public ICollection<User_Class>? User_Class { get; set; }
     }
 }

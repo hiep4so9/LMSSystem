@@ -9,5 +9,9 @@ namespace LMSSystem.Models
 
         [Required]
         public string? CourseName { get; set; }
+        public ICollection<Exam>? Exams { get; set; }
+        public ICollection<Lesson>? Lessons { get; set; }
+        public ICollection<Material>? Materials { get; set; }
+        public ICollection<Schedule>? Schedules { get; set; }
     }
 }

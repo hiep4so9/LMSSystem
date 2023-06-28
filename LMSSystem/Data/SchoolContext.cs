@@ -33,50 +33,50 @@ namespace LMSSystem.Data
             // Một User có một Role
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Role)
-                .WithMany()
+                .WithMany(u => u.Users)
                 .HasForeignKey(u => u.RoleID);
 
 
             // Một Schedule thuộc về một Class
             modelBuilder.Entity<Schedule>()
                 .HasOne(s => s.Class)
-                .WithMany()
+                .WithMany(s => s.Schedules)
                 .HasForeignKey(s => s.ClassID);
 
             // Một Schedule thuộc về một Course
             modelBuilder.Entity<Schedule>()
                 .HasOne(s => s.Course)
-                .WithMany()
+                .WithMany(s => s.Schedules)
                 .HasForeignKey(s => s.CourseID);
 
             // Một Announcement thuộc về một User
             modelBuilder.Entity<Announcement>()
                 .HasOne(a => a.User)
-                .WithMany()
+                .WithMany(a => a.Announcements)
                 .HasForeignKey(a => a.UserID);
 
             // Một Lesson thuộc về một Course
             modelBuilder.Entity<Lesson>()
                 .HasOne(l => l.Course)
-                .WithMany()
+                .WithMany(l => l.Lessons)
                 .HasForeignKey(l => l.CourseID);
 
             // Một Assignment thuộc về một Class
             modelBuilder.Entity<Assignment>()
                 .HasOne(a => a.Class)
-                .WithMany()
+                .WithMany(a => a.Assignments)
                 .HasForeignKey(a => a.ClassID);
 
             // Một Exam thuộc về một Course
             modelBuilder.Entity<Exam>()
                 .HasOne(e => e.Course)
-                .WithMany()
+                .WithMany(e => e.Exams)
                 .HasForeignKey(e => e.CourseID);
 
             // Một Question thuộc về một Exam
             modelBuilder.Entity<Question>()
                 .HasOne(q => q.Exam)
-                .WithMany()
+                .WithMany(e => e.Questions)
                 .HasForeignKey(q => q.ExamID);
 
             // Quan hệ User - User_Schedule - Schedule
@@ -85,13 +85,13 @@ namespace LMSSystem.Data
 
             modelBuilder.Entity<User_Schedule>()
                 .HasOne(us => us.User)
-                .WithMany()
+                .WithMany(us => us.User_Schedule)
                 .HasForeignKey(us => us.UserID)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<User_Schedule>()
                 .HasOne(us => us.Schedule)
-                .WithMany()
+                .WithMany(us => us.User_Schedule)
                 .HasForeignKey(us => us.ScheduleID)
                 .OnDelete(DeleteBehavior.NoAction);
 
@@ -116,13 +116,13 @@ namespace LMSSystem.Data
 
             modelBuilder.Entity<User_Class>()
                 .HasOne(uc => uc.User)
-                .WithMany()
+                .WithMany(uc => uc.User_Class)
                 .HasForeignKey(uc => uc.UserID)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<User_Class>()
                 .HasOne(uc => uc.Class)
-                .WithMany()
+                .WithMany(uc => uc.User_Class)
                 .HasForeignKey(uc => uc.ClassID)
                 .OnDelete(DeleteBehavior.NoAction);
 
@@ -132,13 +132,13 @@ namespace LMSSystem.Data
 
             modelBuilder.Entity<Exam_User>()
                 .HasOne(uc => uc.User)
-                .WithMany()
+                .WithMany(uc => uc.Exam_User)
                 .HasForeignKey(uc => uc.UserID)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Exam_User>()
                 .HasOne(uc => uc.Exam)
-                .WithMany()
+                .WithMany(uc => uc.Exam_User)
                 .HasForeignKey(uc => uc.ExamID)
                 .OnDelete(DeleteBehavior.NoAction);
 
@@ -146,14 +146,14 @@ namespace LMSSystem.Data
             // Một Material thuộc về một Course
             modelBuilder.Entity<Material>()
                 .HasOne(m => m.Course)
-                .WithMany()
+                .WithMany(m => m.Materials)
                 .HasForeignKey(m => m.CourseID);
 
 
             // Một Feedback thuộc về một User
             modelBuilder.Entity<Feedback>()
                 .HasOne(f => f.User)
-                .WithMany()
+                .WithMany(f => f.Feedbacks)
                 .HasForeignKey(f => f.UserID);
 
 

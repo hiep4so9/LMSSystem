@@ -19,5 +19,6 @@ namespace LMSSystem.Models
 
         public virtual Class? Class { get; set; }
         public virtual Course? Course { get; set; }
+        public ICollection<User_Schedule>? User_Schedule { get; set; }
     }
 }

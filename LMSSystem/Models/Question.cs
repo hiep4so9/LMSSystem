@@ -17,6 +17,7 @@ namespace LMSSystem.Models
         [Required]
         public string? QuestionType { get; set; }
 
+        public ICollection<Answer>? Answers { get; set; }
         public virtual Exam? Exam { get; set; }
     }
 }
